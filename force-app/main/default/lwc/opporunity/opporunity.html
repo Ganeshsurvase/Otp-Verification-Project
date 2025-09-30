@@ -1,0 +1,110 @@
+<template>
+    <lightning-card title="Opportunity CSV Importer" icon-name="standard:opportunity">
+        <div class="slds-p-around_medium">
+
+            <!-- Progress Heading -->
+            <lightning-progress-indicator current-step={currentStep} type="path" variant="base">
+                <lightning-progress-step label="Upload" value="1"></lightning-progress-step>
+                <lightning-progress-step label="Preview" value="2"></lightning-progress-step>
+                <lightning-progress-step label="Mapping" value="3"></lightning-progress-step>
+                <lightning-progress-step label="Save" value="4"></lightning-progress-step>
+            </lightning-progress-indicator>
+
+            <div class="slds-m-top_large">
+
+                <!-- Step 1: Upload -->
+                <template if:true={isStep1}>
+                    <lightning-input
+                        type="file"
+                        accept=".csv"
+                        label="Select CSV File"
+                        onchange={handleFileUpload}>
+                    </lightning-input>
+
+                    <div class="slds-m-top_medium">
+                        <lightning-button
+                            label="Next"
+                            onclick={goToPreview}
+                            variant="brand"
+                            disabled={disableNext}>
+                        </lightning-button>
+                    </div>
+                </template>
+
+                <!-- Step 2: Preview -->
+                <template if:true={isStep2}>
+                    <p><strong>CSV Preview (First {displayCount} Rows)</strong></p>
+
+                    <div class="slds-scrollable_x">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered" role="grid">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <template for:each={headers} for:item="h">
+                                        <th key={h} scope="col">{h}</th>
+                                    </template>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={previewRowsDisplay} for:item="row">
+                                    <tr key={row.id}>
+                                        <template for:each={row.cols} for:item="col">
+                                            <td key={col.k}>{col.value}</td>
+                                        </template>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="slds-m-top_medium">
+                        <lightning-button variant="neutral" label="Back" onclick={goToUpload}></lightning-button>
+                        <lightning-button label="Map Fields" onclick={goToMapping} variant="brand" class="slds-m-left_small"></lightning-button>
+                    </div>
+                </template>
+
+                <!-- Step 3: Mapping -->
+                <template if:true={isStep3}>
+                    <p><strong>Map CSV Headers to Opportunity Fields</strong></p>
+
+                    <template for:each={mappingRows} for:item="map">
+                        <div key={map.header} class="slds-p-vertical_x-small slds-grid slds-grid_align-spread slds-grid_align-center">
+                            <div class="slds-col slds-size_3-of-6">
+                                <div><strong>{map.header}</strong></div>
+                                <div class="slds-text-body_small slds-m-top_xx-small">Sample: {map.sample}</div>
+                            </div>
+                            <div class="slds-col slds-size_3-of-6">
+                                <lightning-combobox
+                                    data-header={map.header}
+                                    value={map.apiName}
+                                    placeholder="Select Opportunity Field"
+                                    options={fieldOptions}
+                                    onchange={handleFieldChange}>
+                                </lightning-combobox>
+                            </div>
+                        </div>
+                    </template>
+
+                    <div class="slds-m-top_medium">
+                        <lightning-button variant="neutral" label="Back" onclick={goToPreview}></lightning-button>
+                        <lightning-button label="Save & Records" onclick={saveMappedRecords} variant="brand" class="slds-m-left_small" disabled={saving}></lightning-button>
+                    </div>
+
+                    <template if:true={saveResult}>
+                        <div class="slds-m-top_medium">
+                            <p><strong>Result:</strong></p>
+                            <p>Inserted: {saveResult.insertedCount}</p>
+                            <template if:true={errorMessagesWithKey}>
+                                <div class="slds-text-color_error">
+                                    <template for:each={errorMessagesWithKey} for:item="err">
+                                        <div key={err.id}>{err.text}</div>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </template>
+
+            </div>
+        </div>
+    </lightning-card>
+</template>

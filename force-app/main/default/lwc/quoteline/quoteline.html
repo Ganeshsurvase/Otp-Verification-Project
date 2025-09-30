@@ -1,0 +1,122 @@
+<template>
+    <lightning-card title="Quote CSV Importer" icon-name="standard:quote">
+        <div class="slds-p-around_medium">
+
+            <!-- Progress Indicator -->
+            <lightning-progress-indicator 
+                current-step={currentStep} 
+                type="path" 
+                variant="base" 
+                class="slds-m-bottom_medium">
+
+                <lightning-progress-step label="Upload" value="1"></lightning-progress-step>
+                <lightning-progress-step label="Preview" value="2"></lightning-progress-step>
+                <lightning-progress-step label="Mapping" value="3"></lightning-progress-step>
+                <lightning-progress-step label="Save" value="4"></lightning-progress-step>
+                <lightning-progress-step label="Result" value="5"></lightning-progress-step>
+            </lightning-progress-indicator>
+
+            <!-- Step 1: Upload CSV -->
+            <template if:true={isStep1}>
+                <lightning-input type="file" 
+                                 accept=".csv" 
+                                 label="Select CSV File" 
+                                 onchange={handleFileUpload}>
+                </lightning-input>
+                <template if:true={fileName}>
+                    <p class="slds-m-top_small">File: {fileName}</p>
+                </template>
+                <lightning-button variant="brand" 
+                                  label="Next" 
+                                  onclick={goToPreview} 
+                                  class="slds-m-top_medium" 
+                                  disabled={disableNext}>
+                </lightning-button>
+            </template>
+
+            <!-- Step 2: Preview CSV -->
+            <template if:true={isStep2}>
+                <h3 class="slds-text-heading_small">Preview CSV</h3>
+                <div class="slds-scrollable_x" style="max-height:300px;overflow:auto;">
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                        <thead>
+                            <tr>
+                                <template for:each={headers} for:item="h">
+                                    <th key={h}>{h}</th>
+                                </template>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={previewRowsDisplay} for:item="r">
+                                <tr key={r.id}>
+                                    <template for:each={r.cols} for:item="c">
+                                        <td key={c.k}>{c.value}</td>
+                                    </template>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="slds-m-top_medium">
+                    <lightning-button label="Back" onclick={goBack}></lightning-button>
+                    <lightning-button variant="brand" label="Next" onclick={goToMapping}></lightning-button>
+                </div>
+            </template>
+
+            <!-- Step 3: Field Mapping -->
+            <template if:true={isStep3}>
+                <h3 class="slds-text-heading_small">Field Mapping</h3>
+                <template for:each={mappingOptions} for:item="field">
+                    <div key={field.name} 
+                         class="slds-grid slds-grid_align-spread slds-p-bottom_small">
+                        <div class="slds-col slds-size_1-of-3 slds-text-align_right">
+                            <b>{field.label}</b>
+                        </div>
+                        <div class="slds-col slds-size_2-of-3">
+                            <lightning-combobox 
+                                placeholder="Select CSV column"
+                                options={csvHeaderOptions}
+                                value={field.value}
+                                data-id={field.name}
+                                onchange={handleMappingChange}>
+                            </lightning-combobox>
+                        </div>
+                    </div>
+                </template>
+                <div class="slds-m-top_medium">
+                    <lightning-button label="Back" onclick={goBackToPreview}></lightning-button>
+                    <lightning-button variant="brand" label="Save" onclick={processRecords}></lightning-button>
+                </div>
+            </template>
+
+            <!-- Step 4: Processing -->
+            <template if:true={isStep4}>
+                <h3 class="slds-text-heading_small">Processing Records</h3>
+                <lightning-progress-bar value={progress} size="large" variant="active"></lightning-progress-bar>
+                <p>{processed}/{totalRecords} records processed</p>
+            </template>
+
+            <!-- Step 5: Result -->
+            <template if:true={isStep5}>
+                <h3 class="slds-text-heading_small">Import Results</h3>
+                <template if:true={saveResult.success}>
+                    <p class="slds-text-color_success">Import completed successfully.</p>
+                    <p>Opportunities Inserted: {saveResult.insertedOpportunities}</p>
+                    <p>Quotes Inserted: {saveResult.insertedQuotes}</p>
+                    <p>Quote Lines Inserted: {saveResult.insertedQuoteLines}</p>
+                </template>
+                <template if:false={saveResult.success}>
+                    <p class="slds-text-color_error">Import failed.</p>
+                </template>
+                <template if:true={errorMessagesWithKey}>
+                    <ul class="slds-list_dotted slds-m-top_small">
+                        <template for:each={errorMessagesWithKey} for:item="err">
+                            <li key={err.id}>{err.text}</li>
+                        </template>
+                    </ul>
+                </template>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>

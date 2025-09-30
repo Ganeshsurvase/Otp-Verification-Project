@@ -1,0 +1,19 @@
+/* Full width for all cards */
+.full-width-card {
+    width: 100%;
+}
+
+/* Step 3 background color */
+.success-background {
+    background-color: #28a745; /* Green */
+    border-radius: 0.5rem;
+    padding: 1rem;
+    color: black; /* Text visible on green */
+    
+}
+
+/* Make input & buttons stretch better */
+lightning-input,
+lightning-combobox {
+    width: 100%;
+}

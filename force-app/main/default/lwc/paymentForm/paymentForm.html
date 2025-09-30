@@ -1,0 +1,49 @@
+<template>
+    <lightning-card title="Payment Form" icon-name="utility:money">
+        <div class="slds-p-around_medium">
+            
+            <!-- Booking Id -->
+            <lightning-input 
+                label="Booking Id" 
+                value={bookingId} 
+                onchange={handleChange} 
+                data-field="bookingId">
+            </lightning-input>
+
+            <!-- Amount -->
+            <lightning-input 
+                type="number" 
+                label="Amount" 
+                value={amount} 
+                onchange={handleChange} 
+                data-field="amount">
+            </lightning-input>
+
+            <!-- Status -->
+            <lightning-combobox
+                label="Payment Status"
+                options={statusOptions}
+                value={status}
+                onchange={handleChange}
+                data-field="status">
+            </lightning-combobox>
+
+            <!-- Transaction Id -->
+            <lightning-input 
+                label="Transaction Id" 
+                value={txnId} 
+                onchange={handleChange} 
+                data-field="txnId">
+            </lightning-input>
+
+            <!-- Save button -->
+            <div class="slds-m-top_medium">
+                <lightning-button 
+                    label="Save Payment" 
+                    variant="brand" 
+                    onclick={savePayment}>
+                </lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,93 @@
+<template>
+    <!-- Progress Indicator -->
+    <lightning-card>
+        <div class="slds-p-around_medium full-width-card">
+            <lightning-progress-indicator current-step={currentStep} type="path" variant="base">
+                <lightning-progress-step label="Email" value="1"></lightning-progress-step>
+                <lightning-progress-step label="Verify OTP" value="2"></lightning-progress-step>
+                <lightning-progress-step label="Create Account" value="3"></lightning-progress-step>
+            </lightning-progress-indicator>
+        </div>
+    </lightning-card>
+
+    <!-- Step 1: Enter Email -->
+    <template if:true={isStep1}>
+        <lightning-card title="Step 1:Create Account With Email Verification" icon-name="standard:email">
+            <div class="slds-p-around_medium full-width-card">
+                <lightning-input 
+                    label=" Enter Email"
+                    type="email"
+                    value={email}
+                    onchange={handleEmailChange}>
+                </lightning-input>
+
+                <div class="slds-m-top_medium">
+                    <lightning-button 
+                        label="Send OTP" 
+                        variant="brand" 
+                        onclick={handleSendOtp}>
+                    </lightning-button>
+                </div>
+            </div>
+        </lightning-card>
+    </template>
+
+    <!-- Step 2: Verify OTP -->
+    <template if:true={isStep2}>
+        <lightning-card title="Step 2: Verify OTP" icon-name="custom:custom14">
+            <div class="slds-p-around_medium full-width-card">
+                <lightning-input 
+                    label="Enter 6-digit OTP"
+                    value={otpCode}
+                    maxlength="6"
+                    onchange={handleOtpChange}>
+                </lightning-input>
+
+                <div class="slds-m-top_small">
+                    <lightning-button 
+                        label="Verify OTP" 
+                        variant="success" 
+                        onclick={handleVerifyOtp}>
+                    </lightning-button>
+
+                    <lightning-button 
+                        label="Resend OTP" 
+                        variant="neutral" 
+                        class="slds-m-left_small" 
+                        onclick={handleResendOtp}>
+                    </lightning-button>
+                </div>
+            </div>
+        </lightning-card>
+    </template>
+
+    <!-- Step 3: Create Account -->
+    <template if:true={isStep3}>
+        <lightning-card title="Step 3: Create Account" icon-name="standard:account">
+            <div class="slds-p-around_medium full-width-card success-background">
+                <lightning-input 
+                    label="Account Name"
+                    value={accountName}
+                    onchange={handleAccountNameChange}>
+                </lightning-input>
+
+                <lightning-combobox 
+                    label="Industry"
+                    value={industry}
+                    options={industryOptions}
+                    placeholder="Select Industry"
+                    class="slds-m-top_small"
+                    onchange={handleIndustryChange}>
+                </lightning-combobox>
+
+                <div class="slds-m-top_medium">
+                    <lightning-button 
+                        label="Create Account" 
+                        variant="brand" 
+                        onclick={handleCreateAccount}>
+                    </lightning-button>
+                </div>
+            </div>
+        </lightning-card>
+    </template>
+</template>
