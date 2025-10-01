@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Salesforce DX Project: Next Steps
 
 Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
@@ -21,3 +22,7 @@ The `sfdx-project.json` file contains useful configuration information for your 
 # Create-Account-With-Email-Verification
 Apex/ HTML, Css, Javascript, Salesforce Admin.
 >>>>>>> b4b97267221233253360059db0fd4fc10244aebf
+=======
+# Otp-Verification-Project
+Apex/ HTML, Css, Javascript, Salesforce Admin.
+>>>>>>> cc7cdb101243656b67f2301dc664c9e0310ec9d2
